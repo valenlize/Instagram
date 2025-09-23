@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Instagram</title>
+
+    <!--INCLUIR LIBRERIA BOOTSTRAP CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <!-- estilos css -->
+    <style>
+        
+        .container-fluid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            gap: 8px;
+        }
+            
+        .a {
+            grid-column: span 2 / span 2;
+            grid-row: span 8 / span 8;
+            /*background-color: aqua;*/
+            height: 100vh;
+        }
+
+        .b {
+            grid-column: span 7 / span 7;
+            grid-column-start: 3;
+           /*background-color: #8ee6ff;*/
+            height: 100px;
+        }
+
+        .c {
+            grid-column: span 7 / span 7;
+            grid-row: span 7 / span 7;
+            grid-column-start: 3;
+            grid-row-start: 2;
+            /*background-color: #d0ff8e;*/
+            height: 800px;
+        }
+
+        .d {
+            grid-column: span 3 / span 3;
+            grid-row: span 8 / span 8;
+            grid-column-start: 10;
+            grid-row-start: 1;
+            /*background-color: #8effce;*/
+            height: 100vh;
+        }
+
+        /* incorporo el mediaquerie de resolucion 1263px el nav se reduce */
+        @media (min-width: 1159px) and (max-width: 1263px) {
+            .a {
+                grid-column: span 1 / span 1;
+                grid-row: span 8 / span 8;
+                /*background-color: #8e9eff;*/
+                height: 100vh;
+                }
+            .b {
+                grid-column: span 8 / span 8;
+                grid-column-start: 2;
+                /*background-color: #8ee6ff;*/
+                height: 100px;
+                }
+
+            .c {
+                grid-column: span 8 / span 8;
+                grid-row: span 7 / span 7;
+                grid-column-start: 2;
+                grid-row-start: 2;
+                /*background-color: #d0ff8e;*/
+                height: 800px;
+            }
+        }
+
+        /* incorporo el mediaquerie de resolucion 1159px el nav se reduce */
+        @media (min-width: 767px) and (max-width: 1159px) {
+            
+            .a {
+                grid-column: span 1 / span 1;
+                grid-row: span 8 / span 8;
+                /*background-color: #8e9eff;*/
+                height: 100vh;
+                }
+            .d {
+                display:none;
+            }
+            .b {
+                grid-column: span 11 / span 11;
+                grid-column-start: 2;
+                /*background-color: #8ee6ff;*/
+                height: 100px;
+                }
+
+            .c {
+                grid-column: span 11 / span 11;
+                grid-row: span 7 / span 7;
+                grid-column-start: 2;
+                grid-row-start: 2;
+                /*background-color: #d0ff8e;*/
+                height: 800px;
+            }
+        }
+
+        /* incorporo el mediaquerie de resolucion 767px el nav se reduce */
+            @media (min-width: 10px) and (max-width: 767px) {
+            
+            .a {
+                display:none;
+                }
+
+            .b {
+                grid-column: span 12 / span 12;
+                grid-column-start: 1;
+                grid-row-start: 1;
+                /*background-color: #8ee6ff;*/
+                height: 100px;
+                }
+
+            .c {
+                grid-column: span 12 / span 12;
+                grid-row: span 6 / span 6;
+                grid-column-start: 1;
+                grid-row-start: 2;
+                /*background-color: #d0ff8e;*/
+                height: 800px;
+            }
+
+            .d {
+                display:none;
+            }
+
+            #aHorizontal {
+                grid-column: span 12 / span 12;
+                grid-row: span 1 / span 1;
+                grid-column-start: 1;
+                grid-row-start: 8;
+                background-color: #8e9eff;
+                height: 100px;
+                position: sticky;
+            }
+
+        }
+
+        /*COLOCO MENU CAROUSEL DE HISTORIAS*/
+                * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #fafafa;
+            padding: 20px 0;
+        }
+
+        .stories-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 0 16px;
+            overflow: hidden;
+        }
+
+        .stories-scroll {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 8px 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .stories-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 66px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .story-item:hover {
+            transform: scale(1.05);
+        }
+
+        .story-ring {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            padding: 2px;
+            position: relative;
+        }
+
+        .story-ring.viewed {
+            background: #c7c7cc;
+        }
+
+        .story-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+            display: block;
+        }
+
+        .story-username {
+            font-size: 12px;
+            color: #262626;
+            margin-top: 4px;
+            text-align: center;
+            max-width: 66px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #dbdbdb;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            color: #262626;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .stories-container:hover .scroll-btn {
+            opacity: 1;
+        }
+
+        .scroll-left {
+            left: 0;
+        }
+
+        .scroll-right {
+            right: 0;
+        }
+
+        @media (max-width: 480px) {
+            .stories-container {
+                padding: 0 8px;
+            }
+            
+            .stories-scroll {
+                gap: 12px;
+            }
+        }
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 24px;
+}
+
+.post-card {
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+}
+
+.post-header img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.post-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.post-actions {
+  display: flex;
+  gap: 16px;
+  padding: 12px;
+  font-size: 20px;
+}
+
+.post-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.post-caption {
+  padding: 0 12px 12px;
+  font-size: 14px;
+}
+
+.like-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+
+    </style>
+</head>
+<body>
+    
+    <div class="container-fluid">
+         <nav class="a">
+        <img src="logo instagram.png"width="180px">
+        <br>
+        <br>
+        <a class="btn btn-light d-flex" href="#" role="button">
+            <img src="casa.svg" alt="" width="20px">
+            &nbsp;<strong> Inicio </strong></a>
+        <br>
+        <a class="btn btn-light d-flex" href="#" role="button">
+            <img src="lupa.svg" alt="" width="20px">
+            &nbsp; <strong> Búsqueda </strong></a>
+        <br>
+        <a class="btn btn-light d-flex" href="#" role="button">
+            <img src="compas.svg" alt="" width="20px">
+            &nbsp; <strong> Explorar </strong></a>
+        <br>
+        <a class="btn btn-light d-flex" href="#" role="button">
+            <img src="reels.svg" alt="" width="20px">
+            &nbsp; <strong> Reels  </strong></a>
+        <br>
+        <a class="btn btn-light d-flex" href="#" role="button">
+            <img src="mensajes.svg" alt="" width="20px">
+            &nbsp; <strong> Mensajes </strong></a>
+        <br>
+        <a class="btn btn-light d-flex" href="#" role="button">
+            <img src="notificaciones .svg" alt="" width="20px">
+            &nbsp; <strong> Notificaciones </strong></a>
+        <br>
+        <a class="btn btn-light d-flex" href="#" role="button">
+            <img src="crear.svg" alt="" width="20px">
+            &nbsp; <strong> Crear </strong></a>
+        <br>
+        <a class="btn btn-light d-flex" href="#" role="button">
+            <img src="panel.svg" alt="" width="20px">
+            &nbsp; <strong> Panel </strong></a>
+        <br>
+        </nav>
+        <header class="b">
+            <div class="stories-container">
+        <button class="scroll-btn scroll-left" onclick="scrollStories(-1)">‹</button>   
+        <div class="stories-scroll" id="storiesScroll">
+            <div class="story-item" onclick="viewStory(0)">
+                <div class="story-ring">
+                    <img src="finn .jpg" alt="Finn" class="story-avatar">
+                </div>
+                <span class="story-username">Finn</span>
+            </div>
+            
+            <div class="story-item" onclick="viewStory(1)">
+                <div class="story-ring">
+                    <img src="jake.jpg" alt="jake" class="story-avatar">
+                </div>
+                <span class="story-username">Jake</span>
+            </div>
+            
+            <div class="story-item" onclick="viewStory(2)">
+                <div class="story-ring">
+                    <img src="bmo.jpg" alt="bmo" class="story-avatar">
+                </div>
+                <span class="story-username">Bmo</span>
+            </div>
+            
+            <div class="story-item" onclick="viewStory(3)">
+                <div class="story-ring">
+                    <img src="dulce.jpg" alt="dulce" class="story-avatar">
+                </div>
+                <span class="story-username">Dulce_princesa</span>
+            </div>
+            
+            <div class="story-item" onclick="viewStory(4)">
+                <div class="story-ring">
+                    <img src="marce.jpg" alt="marce" class="story-avatar">
+                </div>
+                <span class="story-username">Marceline</span>
+            </div>
+            
+            <div class="story-item" onclick="viewStory(5)">
+                <div class="story-ring">
+                    <img src="flama.jpg" alt="flama" class="story-avatar">
+                </div>
+                <span class="story-username">Pcs_flama</span>
+            </div>
+        </div>
+        <button class="scroll-btn scroll-right" onclick="scrollStories(1)">›</button>
+    </div>
+
+        </header>
+        <section class="c">
+            <div id="feed" class="feed"></div>
+        </section>
+
+
+        <aside class="d p-3">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div class="d-flex align-items-center gap-2">
+      <img src="grumosa.jpg" class="rounded-circle" width="50" />
+      <div>
+        <strong>Gru.mosa</strong><br>
+        <span class="text-muted" style="font-size: 12px;">Grumosa</span>
+      </div>
+    </div>
+    <a href="#" class="text-primary" style="font-size: 12px;">Cambiar</a>
+  </div>
+
+  <p class="text-muted mb-2" style="font-size: 14px;">Sugerencias para ti</p>
+
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <div class="d-flex align-items-center gap-2">
+      <img src="helado.jpg" class="rounded-circle" width="40" />
+      <div>
+        <strong style="font-size: 13px;">Rey_hld</strong><br>
+        <span class="text-muted" style="font-size: 11px;">Nuevo en Instagram</span>
+      </div>
+    </div>
+    <button class="btn btn-link p-0" style="font-size: 12px;">Seguir</button>
+  </div>
+
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <div class="d-flex align-items-center gap-2">
+      <img src="gunter.jpg" class="rounded-circle" width="40" />
+      <div>
+        <strong style="font-size: 13px;">Gunter</strong><br>
+        <span class="text-muted" style="font-size: 11px;">Sugerido para ti</span>
+      </div>
+    </div>
+    <button class="btn btn-link p-0" style="font-size: 12px;">Seguir</button>
+  </div>
+</aside>
+    
+    <!--INCLUYO JAVASCRIPT DE BOOTSTRAP-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+        <script>
+        const storiesScroll = document.getElementById('storiesScroll');
+        const viewedStories = new Set();
+
+        function scrollStories(direction) {
+            const scrollAmount = 200;
+            storiesScroll.scrollBy({
+                left: direction * scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+
+        function viewStory(index) {
+            viewedStories.add(index);
+            const storyRing = document.querySelectorAll('.story-ring')[index];
+            storyRing.classList.add('viewed');
+            
+        }
+
+        // Navegación con teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                scrollStories(-1);
+            } else if (e.key === 'ArrowRight') {
+                scrollStories(1);
+            }
+        });
+
+        // Touch/swipe para móviles
+        let startX, scrollLeft;
+
+        storiesScroll.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].pageX - storiesScroll.offsetLeft;
+            scrollLeft = storiesScroll.scrollLeft;
+        });
+
+        storiesScroll.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const x = e.touches[0].pageX - storiesScroll.offsetLeft;
+            const walk = (x - startX) * 2;
+            storiesScroll.scrollLeft = scrollLeft - walk;
+        });
+    </script>
+
+<script>
+  const posts = [
+    {
+      user: "Tronqs",
+      avatar: "https://i.pinimg.com/1200x/88/ff/52/88ff5219948b919fe53b8c2f2b17f031.jpg",
+      image: "https://i.pinimg.com/1200x/56/34/32/563432648e5d35ce3842286cfb73cbca.jpg",
+      caption: "Disfrutando de una deliciosa malteada ✨"
+    }
+  ];
+
+const feed = document.getElementById("feed");
+
+  posts.forEach(post => {
+    const card = document.createElement("div");
+    card.className = "post-card";
+    card.innerHTML = `
+      <div class="post-header">
+        <img src="${post.avatar}" alt="${post.user}" />
+        <strong>${post.user}</strong>
+      </div>
+      <img src="${post.image}" class="post-img" alt="Post de ${post.user}" />
+      <div class="post-caption">
+        <strong>${post.user}</strong> ${post.caption}
+      </div>
+    `;
+    feed.appendChild(card);
+  });
+
+  function toggleLike(btn) {
+  const img = btn.querySelector("img");
+  const isLiked = img.getAttribute("src") === "heart-fill.svg";
+  img.setAttribute("src", isLiked ? "heart.svg" : "heart-fill.svg");
+}
+
+</script>
+
+</body>
+</html>
